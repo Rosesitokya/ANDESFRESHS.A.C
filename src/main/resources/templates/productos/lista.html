@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Catálogo')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Catálogo de productos</h2>
+      <div>
+        <a class="btn btn-outline-success btn-sm" th:href="@{/reportes/csv}">CSV</a>
+        <a class="btn btn-outline-success btn-sm" th:href="@{/reportes/excel}">Excel</a>
+        <a class="btn btn-outline-danger btn-sm" th:href="@{/reportes/pdf}" target="_blank">PDF</a>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr><th>Código</th><th>Nombre</th><th>Marca</th><th>Categoría</th><th>Precio S/</th><th>Stock</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="p : ${productos.content}">
+          <td><code th:text="${p.codigo}"></code></td>
+          <td th:text="${p.nombre}"></td>
+          <td th:text="${p.marca}"></td>
+          <td th:text="${p.categoria}"></td>
+          <td th:text="${#numbers.formatDecimal(p.precio,1,2)}"></td>
+          <td th:text="${p.cantidad}"></td>
+          <td>
+            <a class="btn btn-info btn-sm" th:href="@{/productos/{id}(id=${p.id})}">Ver</a>
+            <form sec:authorize="hasRole('ADMIN')" th:action="@{/productos/{id}/eliminar(id=${p.id})}" method="post" class="d-inline">
+              <button class="btn btn-danger btn-sm" type="submit">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center gap-3 align-items-center">
+      <a class="btn btn-outline-dark btn-sm" th:if="${productos.hasPrevious()}" th:href="@{/productos(page=${productos.number - 1})}">Anterior</a>
+      <span th:text="'Página ' + (${productos.number} + 1) + ' de ' + ${productos.totalPages}"></span>
+      <a class="btn btn-outline-dark btn-sm" th:if="${productos.hasNext()}" th:href="@{/productos(page=${productos.number + 1})}">Siguiente</a>
+    </div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Aviso')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <div class="alert alert-warning">
+      <h4>Aviso</h4>
+      <p th:text="${mensaje}"></p>
+      <a class="btn btn-dark" th:href="@{/productos}">Volver al catálogo</a>
+    </div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container" style="max-width:500px;">
+    <div class="card"><div class="card-body">
+      <h3 th:text="${producto.nombre}"></h3>
+      <p><b>Código:</b> <code th:text="${producto.codigo}"></code> | <b>Marca:</b> <span th:text="${producto.marca}"></span></p>
+      <p><b>Categoría:</b> <span th:text="${producto.categoria}"></span> | <b>Precio:</b> S/ <span th:text="${#numbers.formatDecimal(producto.precio,1,2)}"></span></p>
+      <p><b>Stock actual:</b> <span th:text="${producto.cantidad} + ' kg'"></span></p>
+      <a class="btn btn-secondary" th:href="@{/productos}">Volver</a>
+    </div></div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

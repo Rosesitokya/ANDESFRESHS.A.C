@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Resumen')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container" style="max-width:720px;">
+    <h2>Inventario valorizado por categoría</h2>
+    <table class="table table-bordered">
+      <thead class="table-dark"><tr><th>Categoría</th><th class="text-end">N.º productos</th><th class="text-end">Valor S/</th></tr></thead>
+      <tbody><tr th:each="f : ${filas}"><td th:text="${f.categoria}"></td><td class="text-end" th:text="${f.total}"></td><td class="text-end" th:text="${#numbers.formatDecimal(f.valor,1,'COMMA',2,'POINT')}"></td></tr></tbody>
+      <tfoot><tr class="fw-bold"><td colspan="2">TOTAL</td><td class="text-end" th:text="${#numbers.formatDecimal(total,1,'COMMA',2,'POINT')}"></td></tr></tfoot>
+    </table>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

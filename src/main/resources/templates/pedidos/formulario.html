@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nuevo pedido')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container" style="max-width:760px;">
+    <h2>Nuevo pedido Andes Fresh</h2>
+    <form th:action="@{/pedidos/guardar}" th:object="${pedido}" method="post" id="form-pedido" class="card card-body shadow-sm">
+      <div class="mb-3">
+        <label class="form-label fw-bold">RUC del cliente</label>
+        <input type="text" id="ruc-input" th:field="*{rucCliente}" maxlength="11" class="form-control" required>
+        <input type="hidden" id="cliente-nombre" th:field="*{cliente}">
+        <div class="alert alert-warning mt-2 py-2 small mb-0">
+          <strong>RUCs de Prueba:</strong><br>
+          <code>20601234567</code> (El Tambo - <strong>ACTIVO</strong>) |
+          <code>10701234567</code> (Frutería Los Andes - <strong>ACTIVO</strong>) |
+          <code>20509876543</code> (Don Lucho - <strong>INACTIVO</strong>)
+        </div>
+      </div>
+      <table class="table" id="tabla-detalles">
+        <thead class="table-dark"><tr><th>Producto (Precio / Stock)</th><th>Cantidad (kg)</th></tr></thead>
+        <tbody>
+          <tr th:each="det, i : *{detalles}">
+            <td>
+              <select class="form-select select-prod" th:field="*{detalles[__${i.index}__].producto}">
+                <option value="" data-precio="0" data-stock="0">- seleccione -</option>
+                <option th:each="c : ${catalogo}" th:value="${c.nombre}"
+                        th:attr="data-precio=${c.precio}, data-stock=${c.cantidad}"
+                        th:text="${c.nombre + ' (S/ ' + #numbers.formatDecimal(c.precio,1,2) + ' | Stock: ' + c.cantidad + ' kg)'}"></option>
+              </select>
+              <input type="hidden" class="input-precio" th:field="*{detalles[__${i.index}__].precioUnitario}" value="0">
+            </td>
+            <td><input type="number" step="1" min="0" class="form-control input-cant" th:field="*{detalles[__${i.index}__].cantidad}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="resumen-total" class="alert alert-success fw-bold">
+        Subtotal: S/ 0.00 <br> Descuento (5%): - S/ 0.00 <br> <span class="text-danger fs-5">Total a Pagar: S/ 0.00</span>
+      </div>
+      <ul class="alert alert-danger" id="caja-errores" style="display:none; padding-left:2rem;"></ul>
+      <button type="submit" class="btn btn-warning fw-bold">Registrar pedido</button>
+    </form>
+  </main>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const clientesBD = {
+      "20601234567": { nombre: "Restaurante El Tambo SAC", activo: true },
+      "10701234567": { nombre: "Frutería Los Andes", activo: true },
+      "20509876543": { nombre: "Bodega Don Lucho EIRL", activo: false }
+    };
+    const form = document.getElementById("form-pedido"), cajaErrores = document.getElementById("caja-errores");
+    const rucInput = document.getElementById("ruc-input"), clienteNombre = document.getElementById("cliente-nombre"), resumen = document.getElementById("resumen-total");
+    function calcular() {
+      let subtotal = 0, kilos = 0, carrito = {}, stocks = {};
+      document.querySelectorAll("#tabla-detalles tbody tr").forEach(f => {
+        const sel = f.querySelector(".select-prod"), inp = f.querySelector(".input-cant"), hidPrecio = f.querySelector(".input-precio");
+        const opt = sel.options[sel.selectedIndex];
+        const precio = parseFloat(opt?.getAttribute("data-precio") || 0), stock = parseFloat(opt?.getAttribute("data-stock") || 0);
+        hidPrecio.value = precio;
+        const cant = parseFloat(inp.value) || 0;
+        if (sel.value !== "" && cant > 0) {
+          subtotal += precio * cant; kilos += cant;
+          carrito[sel.value] = (carrito[sel.value] || 0) + cant; stocks[sel.value] = stock;
+        }
+      });
+      const desc = subtotal >= 1000 ? subtotal * 0.05 : 0, total = subtotal - desc;
+      resumen.innerHTML = `Subtotal: S/ ${subtotal.toFixed(2)} <br> Descuento (5%): - S/ ${desc.toFixed(2)} <br> <span class="text-danger fs-5">Total a Pagar: S/ ${total.toFixed(2)}</span>`;
+      return { subtotal, total, kilos, carrito, stocks };
+    }
+    document.getElementById("tabla-detalles").addEventListener("input", calcular);
+    form.addEventListener("submit", e => {
+      cajaErrores.style.display = "none"; cajaErrores.innerHTML = "";
+      const errs = [], ruc = rucInput.value.trim(), t = calcular();
+      if (!clientesBD[ruc]) errs.push("El cliente no existe en la base de datos.");
+      else if (!clientesBD[ruc].activo) errs.push("RN-01: El cliente " + clientesBD[ruc].nombre + " está INACTIVO. Pedido rechazado.");
+      else clienteNombre.value = clientesBD[ruc].nombre;
+      if (t.kilos <= 0) errs.push("RN-02: El pedido debe tener al menos un producto mayor a 0 kg.");
+      if (t.kilos > 0 && t.subtotal < 150) errs.push("RN-03: El pedido mínimo es S/ 150.00 (actual: S/ " + t.subtotal.toFixed(2) + ").");
+      for (const prod in t.carrito) if (t.carrito[prod] > t.stocks[prod]) errs.push(`RN-05: Stock insuficiente para ${prod}. Quedan ${t.stocks[prod]} kg.`);
+      if (errs.length > 0) { e.preventDefault(); cajaErrores.style.display = "block"; errs.forEach(m => { const li = document.createElement("li"); li.textContent = m; cajaErrores.appendChild(li); }); }
+    });
+  });
+  </script>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

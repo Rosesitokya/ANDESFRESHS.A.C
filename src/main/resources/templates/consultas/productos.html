@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Buscar productos')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <h2 class="mb-3">Buscar Productos por Marca y Categoría</h2>
+    <form th:action="@{/consultas/productos}" method="get" class="row g-3 align-items-end mb-3">
+      <div class="col-md-5"><label class="form-label">Marca</label><select name="marca" class="form-select"><option value="">Seleccione...</option><option th:each="m : ${marcas}" th:value="${m}" th:text="${m}" th:selected="${m == marcaSel}"></option></select></div>
+      <div class="col-md-5"><label class="form-label">Categoría</label><select name="categoria" class="form-select"><option value="">Seleccione...</option><option th:each="c : ${categorias}" th:value="${c}" th:text="${c}" th:selected="${c == categoriaSel}"></option></select></div>
+      <div class="col-md-2"><button class="btn btn-success w-100" type="submit">Buscar</button></div>
+    </form>
+    <table class="table">
+      <thead class="table-dark"><tr><th>ID</th><th>Nombre</th><th>Marca</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr></thead>
+      <tbody><tr th:each="p : ${productos}"><td th:text="${p.id}"></td><td th:text="${p.nombre}"></td><td th:text="${p.marca}"></td><td th:text="${p.categoria}"></td><td th:text="${#numbers.formatDecimal(p.precio,1,2)}"></td><td th:text="${p.cantidad}"></td></tr></tbody>
+    </table>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

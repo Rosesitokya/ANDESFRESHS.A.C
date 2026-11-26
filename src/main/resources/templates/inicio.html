@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <h1 class="text-center mb-2">Portal Integral Andes Fresh S.A.C.</h1>
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">Nuevo Pedido</h5>
+          <p class="small">Reglas RN-01 a RN-05 con descuento automático de stock.</p>
+          <a class="btn btn-warning w-100" th:href="@{/pedidos/nuevo}">Ir a Pedidos</a>
+        </div></div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">Inventario</h5>
+          <p class="small">Control de stock en tiempo real y alertas de stock crítico.</p>
+          <a class="btn btn-success w-100" th:href="@{/productos/inventario}">Ver Stock</a>
+        </div></div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">Proveedores</h5>
+          <p class="small">Gestión de productores directos y distribuidores.</p>
+          <a class="btn btn-primary w-100" th:href="@{/proveedores}">Ver Proveedores</a>
+        </div></div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">Reportes & API</h5>
+          <p class="small">Exportación CSV, Excel, PDF y endpoints JSON/XML.</p>
+          <a class="btn btn-dark w-100" th:href="@{/consultas/resumen}">Ver Resumen</a>
+        </div></div>
+      </div>
+    </div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

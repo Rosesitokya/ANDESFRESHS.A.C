@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Ingresar')}"></head>
+<body class="bg-light">
+  <div class="container mt-5" style="max-width:400px;">
+    <div class="card shadow-sm"><div class="card-body">
+      <h3 class="text-center mb-3">Andes Fresh</h3>
+      <div th:if="${param.error}" class="alert alert-danger py-2">Usuario o contraseña incorrectos.</div>
+      <div th:if="${param.logout}" class="alert alert-success py-2">Sesión cerrada.</div>
+      <div th:if="${param.registrado}" class="alert alert-success py-2">Cuenta creada. Ya puede ingresar.</div>
+      <form th:action="@{/login}" method="post">
+        <div class="mb-3"><label class="form-label">Usuario</label><input name="username" class="form-control" required></div>
+        <div class="mb-3"><label class="form-label">Contraseña</label><input type="password" name="password" class="form-control" required></div>
+        <button class="btn btn-primary w-100" type="submit">Ingresar</button>
+      </form>
+      <p class="text-center mt-3 mb-0"><a th:href="@{/registro}">Crear cuenta de vendedor</a></p>
+    </div></div>
+  </div>
+</body>
+</html>

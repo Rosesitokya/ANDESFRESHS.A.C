@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registro de Proveedores')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container" style="max-width:640px;">
+    <h2>Registro de Proveedores</h2>
+    <form th:action="@{/proveedores/guardar}" th:object="${proveedor}" method="post" class="card card-body shadow-sm">
+      <div class="mb-2"><label class="form-label">RUC (11 dígitos)</label><input class="form-control" th:field="*{ruc}" maxlength="11" pattern="[0-9]{11}" required></div>
+      <div class="mb-2"><label class="form-label">Razón Social</label><input class="form-control" th:field="*{razonSocial}" required></div>
+      <div class="mb-2"><label class="form-label">Correo</label><input type="email" class="form-control" th:field="*{correo}" required></div>
+      <div class="mb-2"><label class="form-label">Teléfono</label><input type="tel" class="form-control" th:field="*{telefono}" required></div>
+      <div class="mb-2"><label class="form-label">Inicio de Contrato</label><input type="date" class="form-control" th:field="*{inicioContrato}" required></div>
+      <div class="mb-2"><label class="form-label">Categoría de Insumos</label>
+        <select class="form-select" th:field="*{categoria}"><option value="Frutas">Frutas</option><option value="Verduras">Verduras</option><option value="Abarrotes">Abarrotes</option><option value="Embalaje">Embalaje</option></select>
+      </div>
+      <div class="mb-3"><label class="form-label">Tipo de Proveedor</label>
+        <select class="form-select" th:field="*{tipo}"><option value="Productor Directo">Productor Directo</option><option value="Distribuidor Mayorista">Distribuidor Mayorista</option><option value="Importador">Importador</option></select>
+      </div>
+      <button class="btn btn-warning fw-bold" type="submit">Guardar Proveedor</button>
+    </form>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

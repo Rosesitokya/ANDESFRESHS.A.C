@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Proveedores')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div class="d-flex justify-content-between mb-3">
+      <h2>Proveedores registrados</h2>
+      <a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/proveedores/nuevo}">Nuevo proveedor</a>
+    </div>
+    <table class="table table-striped">
+      <thead class="table-dark"><tr><th>RUC</th><th>Razón Social</th><th>Correo</th><th>Teléfono</th><th>Categoría</th><th>Tipo</th><th>Contrato</th><th>Acciones</th></tr></thead>
+      <tbody>
+        <tr th:each="pr : ${proveedores}">
+          <td th:text="${pr.ruc}"></td><td th:text="${pr.razonSocial}"></td><td th:text="${pr.correo}"></td><td th:text="${pr.telefono}"></td>
+          <td th:text="${pr.categoria}"></td><td th:text="${pr.tipo}"></td><td th:text="${#temporals.format(pr.inicioContrato,'dd/MM/yyyy')}"></td>
+          <td><form sec:authorize="hasRole('ADMIN')" th:action="@{/proveedores/{id}/eliminar(id=${pr.id})}" method="post" class="d-inline"><button class="btn btn-danger btn-sm">Eliminar</button></form></td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

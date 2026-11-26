@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Usuarios')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <h2>Usuarios del portal</h2>
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr><th>Usuario</th><th>Roles</th><th>Hash BCrypt</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="u : ${usuarios}">
+          <td th:text="${u.username}"></td>
+          <td><span th:each="r : ${u.roles}" th:text="${r.nombre} + ' '"></span></td>
+          <td><code th:text="${u.password}"></code></td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Empleado')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container" style="max-width:600px;">
+    <div class="card">
+      <div class="card-header" th:text="${titulo}"></div>
+      <div class="card-body">
+        <form th:action="@{/empleados/guardar}" th:object="${empleado}" method="post">
+          <input type="hidden" th:field="*{id}">
+          <label class="form-label">Nombres</label><input class="form-control" th:field="*{nombres}"><div class="text-danger small mb-2" th:errors="*{nombres}"></div>
+          <label class="form-label">Apellidos</label><input class="form-control" th:field="*{apellidos}"><div class="text-danger small mb-2" th:errors="*{apellidos}"></div>
+          <label class="form-label">Fecha de ingreso</label><input type="date" class="form-control" th:field="*{fechaIngreso}"><div class="text-danger small mb-2" th:errors="*{fechaIngreso}"></div>
+          <label class="form-label">Sueldo S/</label><input type="number" step="0.01" class="form-control" th:field="*{sueldo}"><div class="text-danger small mb-2" th:errors="*{sueldo}"></div>
+          <label class="form-label">Dirección</label><input class="form-control" th:field="*{direccion}"><div class="text-danger small mb-2" th:errors="*{direccion}"></div>
+          <button class="btn btn-success mt-2" type="submit">Guardar</button>
+          <a class="btn btn-secondary mt-2" th:href="@{/empleados}">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

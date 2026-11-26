@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Empleados')}"></head>
+<body>
+  <nav th:replace="~{fragments/layout :: navbar}"></nav>
+  <main class="container">
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div class="card">
+      <div class="card-header">Listado de empleados</div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr><th>ID</th><th>Nombres</th><th>Apellidos</th><th>Ingreso</th><th>Sueldo</th><th>Dirección</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="e : ${empleados}">
+              <td th:text="${e.id}"></td>
+              <td th:text="${e.nombres}"></td>
+              <td th:text="${e.apellidos}"></td>
+              <td th:text="${#temporals.format(e.fechaIngreso,'dd/MM/yyyy')}"></td>
+              <td th:text="${#numbers.formatDecimal(e.sueldo,1,2)}"></td>
+              <td th:text="${e.direccion}"></td>
+              <td class="text-nowrap">
+                <a class="btn btn-warning btn-sm" th:href="@{/empleados/editar/{id}(id=${e.id})}">Editar</a>
+                <form th:action="@{/empleados/eliminar/{id}(id=${e.id})}" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar?');">
+                  <button class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer"><a class="btn btn-success" th:href="@{/empleados/nuevo}">Nuevo</a></div>
+    </div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
